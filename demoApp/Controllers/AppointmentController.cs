@@ -18,28 +18,36 @@ namespace demoApp.Controllers
             _env = env;
         }
 
-        // GET: api/Appointment
+        // ✅ GET ALL
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var appointments = await _context.Appointments.ToListAsync();
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            // Prepend image path to serve images
-            var result = appointments.Select(a => new
+            var appointments = await _context.Appointments
+            .Select(a => new
             {
                 a.Id,
                 a.Title,
                 a.Description,
                 a.Date,
-                Image = a.Image != null ? $"{Request.Scheme}://{Request.Host}/uploads/{a.Image}" : null
-            });
+                Image = string.IsNullOrEmpty(a.Image)
+                    ? null
+                    : $"{baseUrl}/uploads/{a.Image}"
+            })
+            .ToListAsync();
 
-            return Ok(result);
+            return Ok(appointments);
         }
 
-        // POST: api/Appointment
+        // ✅ ADD
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] IFormFile? image, [FromForm] string title, [FromForm] string description, [FromForm] DateTime date)
+        public async Task<IActionResult> Add(
+            [FromForm] IFormFile? image,
+            [FromForm] string title,
+            [FromForm] string description,
+            [FromForm] DateTime date
+        )
         {
             string? fileName = null;
 
@@ -66,34 +74,40 @@ namespace demoApp.Controllers
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            // Return appointment with full image path
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
             return Ok(new
             {
                 appointment.Id,
                 appointment.Title,
                 appointment.Description,
                 appointment.Date,
-                Image = fileName != null ? $"{Request.Scheme}://{Request.Host}/uploads/{fileName}" : null
+                Image = fileName != null ? $"{baseUrl}/uploads/{fileName}" : null
             });
         }
 
-        // PUT: api/Appointment/{id}
+        // ✅ UPDATE
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] IFormFile? image, [FromForm] string title, [FromForm] string description, [FromForm] DateTime date)
+        public async Task<IActionResult> Update(
+            int id,
+            [FromForm] IFormFile? image,
+            [FromForm] string title,
+            [FromForm] string description,
+            [FromForm] DateTime date
+        )
         {
-            var appointment = await _context.Appointments.FindAsync(id);
-            if (appointment == null) return NotFound();
+            var appt = await _context.Appointments.FindAsync(id);
+            if (appt == null) return NotFound();
 
-            appointment.Title = title;
-            appointment.Description = description;
-            appointment.Date = date;
+            appt.Title = title;
+            appt.Description = description;
+            appt.Date = date;
 
             if (image != null && image.Length > 0)
             {
-                // Delete old image if exists
-                if (!string.IsNullOrEmpty(appointment.Image))
+                if (!string.IsNullOrEmpty(appt.Image))
                 {
-                    string oldPath = Path.Combine(_env.WebRootPath, "uploads", appointment.Image);
+                    string oldPath = Path.Combine(_env.WebRootPath, "uploads", appt.Image);
                     if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
                 }
 
@@ -106,29 +120,30 @@ namespace demoApp.Controllers
                 using var stream = new FileStream(filePath, FileMode.Create);
                 await image.CopyToAsync(stream);
 
-                appointment.Image = fileName;
+                appt.Image = fileName;
             }
 
             await _context.SaveChangesAsync();
 
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
             return Ok(new
             {
-                appointment.Id,
-                appointment.Title,
-                appointment.Description,
-                appointment.Date,
-                Image = appointment.Image != null ? $"{Request.Scheme}://{Request.Host}/uploads/{appointment.Image}" : null
+                appt.Id,
+                appt.Title,
+                appt.Description,
+                appt.Date,
+                Image = appt.Image != null ? $"{baseUrl}/uploads/{appt.Image}" : null
             });
         }
 
-        // DELETE: api/Appointment/{id}
+        // ✅ DELETE
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment == null) return NotFound();
 
-            // Delete image file if exists
             if (!string.IsNullOrEmpty(appointment.Image))
             {
                 string filePath = Path.Combine(_env.WebRootPath, "uploads", appointment.Image);
@@ -137,6 +152,7 @@ namespace demoApp.Controllers
 
             _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
+
             return Ok();
         }
     }

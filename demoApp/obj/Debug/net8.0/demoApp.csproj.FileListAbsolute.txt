@@ -170,3 +170,4 @@ C:\Users\ZEUS\Desktop\solvetech\demoApp\obj\Debug\net8.0\demoApp.pdb
 C:\Users\ZEUS\Desktop\solvetech\demoApp\obj\Debug\net8.0\demoApp.genruntimeconfig.cache
 C:\Users\ZEUS\Desktop\solvetech\demoApp\obj\Debug\net8.0\ref\demoApp.dll
 C:\Users\ZEUS\Desktop\solvetech\demoApp\bin\Debug\net8.0\demoApp.staticwebassets.runtime.json
+C:\Users\ZEUS\Desktop\solvetech\demoApp\obj\Debug\net8.0\demoApp.sourcelink.json
