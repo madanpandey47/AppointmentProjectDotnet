@@ -9,11 +9,13 @@ namespace backend.Data
     {
         private readonly AppDbContext _context;
         public IAppointmentRepository Appointments { get; }
+        public ICategoryRepository Categories { get; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Appointments = new AppointmentRepository(context);
+            Categories = new CategoryRepository(context);
         }
 
         public async Task<int> SaveChangesAsync()

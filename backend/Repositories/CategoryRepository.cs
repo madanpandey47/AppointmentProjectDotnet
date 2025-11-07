@@ -14,7 +14,7 @@ namespace backend.Repositories
         {
             return await _dbset
                 .Include(c => c.Appointments)
-                .FirstOrDefaultAsync(c => c.cId == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesWithAppointments()

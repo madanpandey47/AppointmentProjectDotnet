@@ -18,8 +18,8 @@ namespace backend.Data
             modelBuilder.Entity<Appointment>()
                         .HasOne(a => a.Category)
                         .WithMany(c => c.Appointments)
-                        .HasForeignKey(a => a.cId)
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey(a => a.CategoryId)
+                        .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

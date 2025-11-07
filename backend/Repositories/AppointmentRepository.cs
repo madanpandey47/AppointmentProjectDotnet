@@ -12,6 +12,7 @@ namespace backend.Repositories
         public async Task<IEnumerable<Appointment>> GetUpcomingAppointments()
         {
             return await _dbset
+                .Include(a => a.Category)
                 .Where(a => a.Date >= DateTime.Now)
                 .ToListAsync();
         }

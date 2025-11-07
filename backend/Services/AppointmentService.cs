@@ -19,6 +19,21 @@ namespace backend.Services
 
         public async Task<Appointment?> Add(Appointment a)
         {
+            // Validate CategoryId
+            if (a.CategoryId != 0) // Assuming 0 is not a valid CategoryId
+            {
+                var categoryExists = await _uow.Categories.GetByIdAsync(a.CategoryId);
+                if (categoryExists == null)
+                {
+                    throw new ArgumentException($"Category with ID {a.CategoryId} does not exist.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("CategoryId cannot be 0 or empty.");
+            }
+
+
             await _uow.Appointments.AddAsync(a);
             await _uow.SaveChangesAsync();
             return a;
@@ -26,6 +41,20 @@ namespace backend.Services
 
         public async Task<Appointment?> Update(Appointment a)
         {
+            // Validate CategoryId
+            if (a.CategoryId != 0) // Assuming 0 is not a valid CategoryId
+            {
+                var categoryExists = await _uow.Categories.GetByIdAsync(a.CategoryId);
+                if (categoryExists == null)
+                {
+                    throw new ArgumentException($"Category with ID {a.CategoryId} does not exist.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("CategoryId cannot be 0 or empty.");
+            }
+
             _uow.Appointments.Update(a);
             await _uow.SaveChangesAsync();
             return a;
