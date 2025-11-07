@@ -1,15 +1,11 @@
-﻿using backend.Interfaces;
+﻿using backend.Data;
 using backend.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace backend.Data
 {
-    public interface IUnitOfWork
-    {
-        IAppointmentRepository Appointments { get; }
-        Task SaveAsync();
-    }
-
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context;
         public IAppointmentRepository Appointments { get; }
@@ -20,9 +16,14 @@ namespace backend.Data
             Appointments = new AppointmentRepository(context);
         }
 
-        public async Task SaveAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using System.ComponentModel;
+using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
@@ -7,17 +8,17 @@ namespace backend.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Appointment>()
-                        .HasOne(a => a.User)
-                        .WithMany()
-                        .HasForeignKey(a => a.UserId)
+                        .HasOne(a => a.Category)
+                        .WithMany(c => c.Appointments)
+                        .HasForeignKey(a => a.cId)
                         .OnDelete(DeleteBehavior.SetNull);
         }
     }

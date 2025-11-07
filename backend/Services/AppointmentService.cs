@@ -20,14 +20,14 @@ namespace backend.Services
         public async Task<Appointment?> Add(Appointment a)
         {
             await _uow.Appointments.AddAsync(a);
-            await _uow.SaveAsync();
+            await _uow.SaveChangesAsync();
             return a;
         }
 
         public async Task<Appointment?> Update(Appointment a)
         {
             _uow.Appointments.Update(a);
-            await _uow.SaveAsync();
+            await _uow.SaveChangesAsync();
             return a;
         }
 
@@ -37,7 +37,7 @@ namespace backend.Services
             if (appt == null) return false;
 
             _uow.Appointments.Delete(appt);
-            await _uow.SaveAsync();
+            await _uow.SaveChangesAsync();
             return true;
         }
     }

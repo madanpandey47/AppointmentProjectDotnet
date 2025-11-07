@@ -9,6 +9,7 @@ C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\backend.MvcApplicationP
 C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\backend.sourcelink.json
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\appsettings.json
+C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\backend.staticwebassets.runtime.json
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\backend.staticwebassets.endpoints.json
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\backend.exe
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\backend.deps.json
@@ -51,6 +52,7 @@ C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.IdentityModel
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.Office.Interop.Outlook.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.OpenApi.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
@@ -164,5 +166,3 @@ C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\refint\backend.dll
 C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\backend.pdb
 C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 C:\Users\ZEUS\Desktop\solvetech\backend\obj\Debug\net9.0\ref\backend.dll
-C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\Microsoft.Office.Interop.Outlook.dll
-C:\Users\ZEUS\Desktop\solvetech\backend\bin\Debug\net9.0\backend.staticwebassets.runtime.json

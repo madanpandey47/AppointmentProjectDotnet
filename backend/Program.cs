@@ -1,7 +1,7 @@
 using backend.Data;
 using backend.Repositories;
 using backend.Services;
-using backend.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,9 +22,11 @@ builder.Services.AddCors(options =>
 });
 
 // Repositories & Services
-builder.Services.AddScoped<backend.Interfaces.IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<backend.Data.IUnitOfWork, UnitOfWork>(); // Add this line
+builder.Services.AddScoped<backend.Repositories.IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
+// Add controllers & Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,7 +41,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseCors("AllowLocalhost4000");
 app.UseAuthorization();
 

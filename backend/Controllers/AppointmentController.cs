@@ -1,5 +1,5 @@
 ﻿using backend.Models;
-using backend.Interfaces;
+using backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -15,7 +15,7 @@ namespace backend.Controllers
             _repo = repo;
         }
 
-        // ✅ Get all
+        // Get all
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -23,33 +23,18 @@ namespace backend.Controllers
             return Ok(data);
         }
 
-        // ✅ Get by id
+        // Get by id
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var appointment = await _repo.GetByIdWithUserAsync(id);
+            var appointment = await _repo.GetByIdAsync(id);
             if (appointment == null)
                 return NotFound();
 
-            // Only return minimal user info if exists
-            var result = new
-            {
-                appointment.Id,
-                appointment.Title,
-                appointment.Description,
-                appointment.Date,
-                appointment.Image,
-                User = appointment.User == null ? null : new
-                {
-                    appointment.User.Id,
-                    appointment.User.Username
-                }
-            };
-
-            return Ok(result);
+            return Ok(appointment);
         }
 
-        // ✅ Create
+        // Create
         [HttpPost]
         public async Task<IActionResult> Create(Appointment appointment)
         {
@@ -57,7 +42,7 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(Get), new { id = appointment.Id }, appointment);
         }
 
-        // ✅ Update
+        //  Update
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Appointment appointment)
         {
@@ -73,7 +58,7 @@ namespace backend.Controllers
             return NoContent();
         }
 
-        // ✅ Delete
+        //  Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
