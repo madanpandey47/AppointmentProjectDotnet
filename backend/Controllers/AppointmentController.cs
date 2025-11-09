@@ -118,12 +118,13 @@
 ﻿
 ﻿        ﻿        ﻿        ﻿            existing.Description = appointment.Description;
 ﻿
-﻿        ﻿        ﻿        ﻿            existing.Date = appointment.Date;
-﻿
-﻿        ﻿        ﻿        ﻿
-﻿
-﻿        ﻿        ﻿        ﻿            _repo.Update(existing);
-﻿
+﻿        ﻿        ﻿        ﻿                        existing.Date = appointment.Date;
+﻿        ﻿        ﻿        ﻿            
+﻿        ﻿        ﻿        ﻿                        existing.CategoryId = appointment.CategoryId;
+﻿        ﻿        ﻿        ﻿            
+﻿        ﻿        ﻿        ﻿            
+﻿        ﻿        ﻿        ﻿            
+﻿        ﻿        ﻿        ﻿                        _repo.Update(existing);﻿
 ﻿        ﻿        ﻿        ﻿            return NoContent();
 ﻿
 ﻿        ﻿        ﻿        ﻿        }﻿        //  Delete
