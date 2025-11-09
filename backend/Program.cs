@@ -1,7 +1,6 @@
 using backend.Data;
 using backend.Repositories;
 using backend.Services;
-
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,9 +29,7 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
-
 app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
@@ -44,6 +41,5 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseCors("AllowLocalhost4000");
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();
