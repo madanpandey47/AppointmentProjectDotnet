@@ -13,15 +13,9 @@ namespace backend.Repositories
         public async Task<Category?> GetCategoryWithAppointments(int id)
         {
             return await _dbset
-                .Include(c => c.Appointments)
+                .Include(c => c.AppointmentCategories)
+                .ThenInclude(ac => ac.Appointment)
                 .FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        public async Task<IEnumerable<Category>> GetAllCategoriesWithAppointments()
-        {
-            return await _dbset
-                .Include(c => c.Appointments)
-                .ToListAsync();
         }
     }
 }

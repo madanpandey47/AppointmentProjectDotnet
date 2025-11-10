@@ -32,8 +32,7 @@ namespace backend.Services
                 Description = a.Description,
                 Date = a.Date,
                 Image = a.Image,
-                CategoryId = a.CategoryId,
-                CategoryName = a.Category?.Name ?? "N/A"
+                Categories = a.AppointmentCategories.Select(ac => new CategoryDTO { Id = ac.CategoryId, Name = ac.Category.Name }).ToList()
             });
         }
 
@@ -49,8 +48,7 @@ namespace backend.Services
                 Description = appointment.Description,
                 Date = appointment.Date,
                 Image = appointment.Image,
-                CategoryId = appointment.CategoryId,
-                CategoryName = appointment.Category?.Name ?? "N/A"
+                Categories = appointment.AppointmentCategories.Select(ac => new CategoryDTO { Id = ac.CategoryId, Name = ac.Category.Name }).ToList()
             };
         }
 
@@ -61,7 +59,7 @@ namespace backend.Services
                 Title = appointmentDto.Title,
                 Description = appointmentDto.Description,
                 Date = appointmentDto.Date,
-                CategoryId = appointmentDto.CategoryId
+                AppointmentCategories = new List<AppointmentCategory>()
             };
 
             if (imageFile != null)
@@ -69,21 +67,26 @@ namespace backend.Services
                 appointment.Image = await SaveImage(imageFile);
             }
 
+            foreach (var categoryId in appointmentDto.CategoryIds)
+            {
+                appointment.AppointmentCategories.Add(new AppointmentCategory { CategoryId = categoryId });
+            }
+
             await _uow.Appointments.AddAsync(appointment);
             await _uow.SaveChangesAsync();
 
-            return new AppointmentDTO { Id = appointment.Id, Title = appointment.Title, Description = appointment.Description, Date = appointment.Date, Image = appointment.Image, CategoryId = appointment.CategoryId, CategoryName = "" };
+            // This is not ideal, we should probably fetch the created appointment with categories to return the full DTO
+            return new AppointmentDTO { Id = appointment.Id, Title = appointment.Title, Description = appointment.Description, Date = appointment.Date, Image = appointment.Image };
         }
 
         public async Task<bool> UpdateAppointmentAsync(int id, CreateAppointmentDTO appointmentDto, IFormFile? imageFile)
         {
-            var existing = await _uow.Appointments.GetByIdAsync(id);
+            var existing = await _uow.Appointments.GetByIdWithCategoryAsync(id);
             if (existing == null) return false;
 
             existing.Title = appointmentDto.Title;
             existing.Description = appointmentDto.Description;
             existing.Date = appointmentDto.Date;
-            existing.CategoryId = appointmentDto.CategoryId;
 
             if (imageFile != null)
             {
@@ -92,6 +95,12 @@ namespace backend.Services
                     DeleteImage(existing.Image);
                 }
                 existing.Image = await SaveImage(imageFile);
+            }
+
+            existing.AppointmentCategories.Clear();
+            foreach (var categoryId in appointmentDto.CategoryIds)
+            {
+                existing.AppointmentCategories.Add(new AppointmentCategory { CategoryId = categoryId });
             }
 
             _uow.Appointments.Update(existing);
@@ -126,6 +135,8 @@ namespace backend.Services
 
             return $"/uploads/{fileName}";
         }
+
+
 
         private void DeleteImage(string imagePath)
         {

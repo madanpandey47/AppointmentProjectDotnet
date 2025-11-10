@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace backend.DTOs
 {
@@ -13,6 +14,6 @@ namespace backend.DTOs
         public DateTime Date { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; } = new List<int>();
     }
 }

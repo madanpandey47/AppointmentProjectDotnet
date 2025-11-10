@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace backend.Models
 {
@@ -7,6 +8,6 @@ namespace backend.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public ICollection<Appointment>? Appointments { get; set; }
+        public ICollection<AppointmentCategory> AppointmentCategories { get; set; }
     }
 }
