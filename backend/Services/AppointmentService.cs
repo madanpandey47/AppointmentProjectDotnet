@@ -52,7 +52,7 @@ namespace backend.Services
             };
         }
 
-        public async Task<AppointmentDTO> CreateAppointmentAsync(CreateAppointmentDTO appointmentDto, IFormFile? imageFile)
+        public async Task<AppointmentDTO> CreateAppointmentAsync(CreateAppointmentDTO appointmentDto, IFormFile imageFile)
         {
             var appointment = new Appointment
             {
@@ -75,7 +75,6 @@ namespace backend.Services
             await _uow.Appointments.AddAsync(appointment);
             await _uow.SaveChangesAsync();
 
-            // This is not ideal, we should probably fetch the created appointment with categories to return the full DTO
             return new AppointmentDTO { Id = appointment.Id, Title = appointment.Title, Description = appointment.Description, Date = appointment.Date, Image = appointment.Image };
         }
 
@@ -108,6 +107,19 @@ namespace backend.Services
             return true;
         }
 
+                private async Task<string> SaveImage(IFormFile imageFile)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+            var filePath = Path.Combine(_hosting.WebRootPath, "uploads", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            return $"/uploads/{fileName}";
+        }
+
         public async Task<bool> DeleteAppointmentAsync(int id)
         {
             var appointment = await _uow.Appointments.GetByIdAsync(id);
@@ -122,20 +134,6 @@ namespace backend.Services
             await _uow.SaveChangesAsync();
             return true;
         }
-
-        private async Task<string> SaveImage(IFormFile imageFile)
-        {
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
-            var filePath = Path.Combine(_hosting.WebRootPath, "uploads", fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(stream);
-            }
-
-            return $"/uploads/{fileName}";
-        }
-
 
 
         private void DeleteImage(string imagePath)
