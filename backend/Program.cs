@@ -21,9 +21,12 @@ builder.Services.AddCors(options =>
 });
 
 // Repositories & Services
-builder.Services.AddScoped<backend.Data.IUnitOfWork, UnitOfWork>(); // Add this line
+builder.Services.AddScoped<backend.Data.IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<backend.Repositories.IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<backend.Repositories.ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
 
 // Add controllers & Swagger
 builder.Services.AddControllers();
