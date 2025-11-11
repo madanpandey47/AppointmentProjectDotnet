@@ -9,7 +9,6 @@ namespace backend.Repositories
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
         public CategoryRepository(AppDbContext context) : base(context) { }
-
         public async Task<Category?> GetCategoryWithAppointments(int id)
         {
             return await _dbset
