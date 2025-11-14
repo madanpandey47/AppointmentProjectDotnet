@@ -135,7 +135,6 @@ namespace backend.Services
             return true;
         }
 
-
         private void DeleteImage(string imagePath)
         {
             if (string.IsNullOrEmpty(imagePath)) return;
