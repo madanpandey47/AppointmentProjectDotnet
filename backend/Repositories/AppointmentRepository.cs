@@ -16,6 +16,7 @@ namespace backend.Repositories
                 .ThenInclude(ac => ac.Category)
                 .ToListAsync();
         }
+        
 
         public async Task<Appointment?> GetByIdWithCategoryAsync(int id)
         {
