@@ -3,8 +3,8 @@ namespace backend.Models
     public class AppointmentCategory
     {
         public int AppointmentId { get; set; }
-        public Appointment Appointment { get; set; }
+        public Appointment Appointment { get; set; } = null!;
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category Category { get; set; } = null!;
     }
 }

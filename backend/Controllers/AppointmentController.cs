@@ -1,18 +1,17 @@
 using backend.DTOs;
+using backend.Models;
 using backend.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AppointmentController : ControllerBase
+    [Route("api/[controller]")]
+    public class AppointmentsController : ControllerBase
     {
         private readonly IAppointmentService _service;
 
-        public AppointmentController(IAppointmentService service)
+        public AppointmentsController(IAppointmentService service)
         {
             _service = service;
         }
@@ -20,42 +19,36 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var dtos = await _service.GetAllAppointmentsAsync();
-            return Ok(dtos);
+            return Ok(await _service.GetAll_SP());
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var dto = await _service.GetAppointmentByIdAsync(id);
-            if (dto == null)
-                return NotFound();
-            return Ok(dto);
+            var item = await _service.GetById_SP(id);
+            if (item == null) return NotFound();
+            return Ok(item);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateAppointmentDTO appointmentDto, IFormFile? imageFile)
         {
-            var createdAppointment = await _service.CreateAppointmentAsync(appointmentDto, imageFile);
-            return CreatedAtAction(nameof(Get), new { id = createdAppointment.Id }, createdAppointment);
+            var appointment = await _service.Insert_SP(appointmentDto, imageFile);
+            return Ok(appointment);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromForm] CreateAppointmentDTO appointmentDto, IFormFile? imageFile)
         {
-            var result = await _service.UpdateAppointmentAsync(id, appointmentDto, imageFile);
-            if (!result)
-                return NotFound();
-            return NoContent();
+            var success = await _service.Update_SP(id, appointmentDto, imageFile);
+            return success ? Ok() : NotFound();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _service.DeleteAppointmentAsync(id);
-            if (!result)
-                return NotFound();
-            return NoContent();
+            var success = await _service.Delete_SP(id);
+            return success ? Ok() : NotFound();
         }
     }
 }

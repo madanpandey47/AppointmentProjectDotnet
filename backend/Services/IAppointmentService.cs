@@ -7,10 +7,10 @@ namespace backend.Services
 {
     public interface IAppointmentService
     {
-        Task<IEnumerable<AppointmentDTO>> GetAllAppointmentsAsync();
-        Task<AppointmentDTO?> GetAppointmentByIdAsync(int id);
-        Task<AppointmentDTO> CreateAppointmentAsync(CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
-        Task<bool> UpdateAppointmentAsync(int id, CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
-        Task<bool> DeleteAppointmentAsync(int id);
+        Task<IEnumerable<AppointmentDTO>> GetAll_SP();
+        Task<AppointmentDTO?> GetById_SP(int id);
+        Task<AppointmentDTO> Insert_SP(CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
+        Task<bool> Update_SP(int id, CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
+        Task<bool> Delete_SP(int id);
     }
 }

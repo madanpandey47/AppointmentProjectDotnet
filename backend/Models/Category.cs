@@ -8,6 +8,6 @@ namespace backend.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public ICollection<AppointmentCategory> AppointmentCategories { get; set; }
+        public ICollection<AppointmentCategory> AppointmentCategories { get; set; } = new List<AppointmentCategory>();
     }
 }
