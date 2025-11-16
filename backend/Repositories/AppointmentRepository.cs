@@ -46,7 +46,7 @@ namespace backend.Repositories
                 .Where(ac => ac.AppointmentId == appointment.Id)
                 .Include(ac => ac.Category)
                 .ToListAsync();
-
+  
             return appointment;
         }
 
@@ -116,7 +116,7 @@ namespace backend.Repositories
             return true;
         }
 
-        // New method for paginated appointments
+        // Method for paginated appointments
         public async Task<(IEnumerable<Appointment> appointments, int totalCount)> GetAllAsync(int pageNumber, int pageSize)
         {
             var query = _context.Appointments
@@ -126,14 +126,14 @@ namespace backend.Repositories
             var totalCount = await query.CountAsync();
 
             var appointments = await query
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip((pageNumber - 1) * (pageSize))
                 .Take(pageSize)
                 .ToListAsync();
 
             return (appointments, totalCount);
         }
 
-        // New method to get total count of appointments
+        // method to get total count of appointments
         public async Task<int> CountAsync()
         {
             return await _context.Appointments.CountAsync();
