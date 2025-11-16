@@ -115,35 +115,5 @@ namespace backend.Repositories
 
             return true;
         }
-
-        public Task<IEnumerable<Appointment>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Appointment?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddAsync(Appointment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Appointment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Appointment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Appointment>> FindAsync(Expression<Func<Appointment, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace backend.Repositories
 {
-    public interface IAppointmentRepository : IGenericRepository<Appointment>
+    public interface IAppointmentRepository 
     {
         Task<IEnumerable<Appointment>> GetAll_SP();
         Task<Appointment?> GetById_SP(int id);
