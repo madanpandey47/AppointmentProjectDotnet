@@ -17,9 +17,19 @@ namespace backend.Repositories
 
         public async Task<IEnumerable<Appointment>> GetAll_SP()
         {
-            return await _context.Appointments
+            var appointments = await _context.Appointments
                 .FromSqlRaw("EXEC mp_GetAllAppointments")
                 .ToListAsync();
+
+            foreach (var appointment in appointments)
+            {
+                appointment.AppointmentCategories = await _context.AppointmentCategories
+                    .Where(ac => ac.AppointmentId == appointment.Id)
+                    .Include(ac => ac.Category)
+                    .ToListAsync();
+            }
+
+            return appointments;
         }
 
         public async Task<Appointment?> GetById_SP(int id)

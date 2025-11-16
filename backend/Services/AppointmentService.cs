@@ -82,14 +82,14 @@ namespace backend.Services
 
         public async Task<bool> Update_SP(int id, CreateAppointmentDTO dto, IFormFile? imageFile)
         {
-            var appointment = new Appointment
-            {
-                Id = id,
-                Title = dto.Title,
-                Description = dto.Description,
-                Date = dto.Date,
-                AppointmentCategories = dto.CategoryIds.Select(cid => new AppointmentCategory { CategoryId = cid }).ToList()
-            };
+            var appointment = await _repo.GetById_SP(id);
+            if (appointment == null)
+                return false;
+
+            appointment.Title = dto.Title;
+            appointment.Description = dto.Description;
+            appointment.Date = dto.Date;
+            appointment.AppointmentCategories = dto.CategoryIds.Select(cid => new AppointmentCategory { CategoryId = cid, AppointmentId = id }).ToList();
 
             if (imageFile != null)
                 appointment.Image = await SaveImage(imageFile);
