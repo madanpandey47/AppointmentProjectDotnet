@@ -17,7 +17,14 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 6)
+        {
+            var paginatedAppointments = await _service.GetAllAsync(pageNumber, pageSize);
+            return Ok(paginatedAppointments);
+        }
+
+        [HttpGet("all")] // Renamed the original GetAll to GetAll_SP to avoid conflict
+        public async Task<IActionResult> GetAll_SP()
         {
             return Ok(await _service.GetAll_SP());
         }

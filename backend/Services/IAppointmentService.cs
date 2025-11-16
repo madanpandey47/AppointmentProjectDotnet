@@ -12,5 +12,6 @@ namespace backend.Services
         Task<AppointmentDTO> Insert_SP(CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
         Task<bool> Update_SP(int id, CreateAppointmentDTO appointmentDto, IFormFile? imageFile);
         Task<bool> Delete_SP(int id);
+        Task<PaginatedAppointmentsDTO> GetAllAsync(int pageNumber, int pageSize);
     }
 }

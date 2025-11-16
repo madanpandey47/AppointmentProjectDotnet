@@ -110,5 +110,31 @@ namespace backend.Services
             await file.CopyToAsync(stream);
             return $"/uploads/{fileName}";
         }
+
+        // New method for paginated appointments
+        public async Task<PaginatedAppointmentsDTO> GetAllAsync(int pageNumber, int pageSize)
+        {
+            var (appointments, totalCount) = await _repo.GetAllAsync(pageNumber, pageSize);
+
+            var appointmentDTOs = appointments.Select(a => new AppointmentDTO
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Description = a.Description,
+                Date = a.Date,
+                Image = a.Image,
+                Categories = a.AppointmentCategories.Select(ac => new CategoryDTO
+                {
+                    Id = ac.CategoryId,
+                    Name = ac.Category?.Name ?? ""
+                }).ToList()
+            }).ToList();
+
+            return new PaginatedAppointmentsDTO
+            {
+                Appointments = appointmentDTOs,
+                TotalCount = totalCount
+            };
+        }
     }
 }
