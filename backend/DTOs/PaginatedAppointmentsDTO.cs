@@ -4,7 +4,7 @@ namespace backend.DTOs
 {
     public class PaginatedAppointmentsDTO
     {
-        public IEnumerable<AppointmentDTO> Appointments { get; set; }
+        public IEnumerable<AppointmentDTO> Appointments { get; set; } = new List<AppointmentDTO>();
         public int TotalCount { get; set; }
     }
 }
