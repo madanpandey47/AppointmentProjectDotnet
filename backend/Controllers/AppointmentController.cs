@@ -23,7 +23,7 @@ namespace backend.Controllers
             return Ok(paginatedAppointments);
         }
 
-        [HttpGet("all")] // Renamed the original GetAll to GetAll_SP to avoid conflict
+        [HttpGet("all")] 
         public async Task<IActionResult> GetAll_SP()
         {
             return Ok(await _service.GetAll_SP());

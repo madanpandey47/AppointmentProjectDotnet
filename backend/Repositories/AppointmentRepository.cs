@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using backend.Data;
+﻿using backend.Data;
 using backend.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -15,41 +14,45 @@ namespace backend.Repositories
             _context = context;
         }
 
+        // Get all appointments
         public async Task<IEnumerable<Appointment>> GetAll_SP()
         {
             var appointments = await _context.Appointments
                 .FromSqlRaw("EXEC mp_GetAllAppointments")
                 .ToListAsync();
 
-            foreach (var appointment in appointments)
+            foreach (var ap in appointments)
             {
-                appointment.AppointmentCategories = await _context.AppointmentCategories
-                    .Where(ac => ac.AppointmentId == appointment.Id)
-                    .Include(ac => ac.Category)
+                ap.AppointmentCategories = await _context.AppointmentCategories
+                    .Where(x => x.AppointmentId == ap.Id)
+                    .Include(x => x.Category)
                     .ToListAsync();
             }
 
             return appointments;
         }
 
+        // Get by Id
         public async Task<Appointment?> GetById_SP(int id)
         {
             var param = new SqlParameter("@Id", id);
-            var appointments = await _context.Appointments
+
+            var data = await _context.Appointments
                 .FromSqlRaw("EXEC mp_GetAppointmentById @Id", param)
                 .ToListAsync();
 
-            var appointment = appointments.FirstOrDefault();
+            var appointment = data.FirstOrDefault();
             if (appointment == null) return null;
 
             appointment.AppointmentCategories = await _context.AppointmentCategories
-                .Where(ac => ac.AppointmentId == appointment.Id)
-                .Include(ac => ac.Category)
+                .Where(x => x.AppointmentId == appointment.Id)
+                .Include(x => x.Category)
                 .ToListAsync();
-  
+
             return appointment;
         }
 
+        // Insert appointment + categories
         public async Task<int> Insert_SP(Appointment appointment)
         {
             var newId = new SqlParameter("@NewId", System.Data.SqlDbType.Int)
@@ -66,18 +69,18 @@ namespace backend.Repositories
                 newId
             );
 
-            foreach (var ac in appointment.AppointmentCategories)
-            {
-                await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC mp_InsertAppointmentCategory @AppointmentId, @CategoryId",
-                    new SqlParameter("@AppointmentId", newId.Value),
-                    new SqlParameter("@CategoryId", ac.CategoryId)
-                );
-            }
+            // Categories via CSV
+            var csv = string.Join(",", appointment.AppointmentCategories.Select(c => c.CategoryId));
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC mp_UpdateAppointmentCategories @AppointmentId, @CategoryCsv",
+                new SqlParameter("@AppointmentId", (int)newId.Value),
+                new SqlParameter("@CategoryCsv", csv)
+            );
 
             return (int)newId.Value;
         }
 
+        // Update appointment + categories
         public async Task<bool> Update_SP(Appointment appointment)
         {
             await _context.Database.ExecuteSqlRawAsync(
@@ -89,23 +92,18 @@ namespace backend.Repositories
                 new SqlParameter("@Image", appointment.Image ?? (object)DBNull.Value)
             );
 
+            // Categories in one call
+            var csv = string.Join(",", appointment.AppointmentCategories.Select(c => c.CategoryId));
             await _context.Database.ExecuteSqlRawAsync(
-                "EXEC mp_DeleteAppointmentCategoriesByAppointmentId @AppointmentId",
-                new SqlParameter("@AppointmentId", appointment.Id)
+                "EXEC mp_UpdateAppointmentCategories @AppointmentId, @CategoryCsv",
+                new SqlParameter("@AppointmentId", appointment.Id),
+                new SqlParameter("@CategoryCsv", csv)
             );
-
-            foreach (var ac in appointment.AppointmentCategories)
-            {
-                await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC mp_InsertAppointmentCategory @AppointmentId, @CategoryId",
-                    new SqlParameter("@AppointmentId", appointment.Id),
-                    new SqlParameter("@CategoryId", ac.CategoryId)
-                );
-            }
 
             return true;
         }
 
+        // Delete SP
         public async Task<bool> Delete_SP(int id)
         {
             await _context.Database.ExecuteSqlRawAsync(
@@ -116,24 +114,19 @@ namespace backend.Repositories
             return true;
         }
 
-        // Method for paginated appointments
-        public async Task<(IEnumerable<Appointment> appointments, int totalCount)> GetAllAsync(int pageNumber, int pageSize)
+        // Paginated list
+        public async Task<(IEnumerable<Appointment> appointments, int totalCount)> GetAllAsync(int page, int size)
         {
             var query = _context.Appointments
                 .Include(a => a.AppointmentCategories)
                     .ThenInclude(ac => ac.Category);
 
-            var totalCount = await query.CountAsync();
+            var total = await query.CountAsync();
+            var data = await query.Skip((page - 1) * size).Take(size).ToListAsync();
 
-            var appointments = await query
-                .Skip((pageNumber - 1) * (pageSize))
-                .Take(pageSize)
-                .ToListAsync();
-
-            return (appointments, totalCount);
+            return (data, total);
         }
 
-        // method to get total count of appointments
         public async Task<int> CountAsync()
         {
             return await _context.Appointments.CountAsync();
