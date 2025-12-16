@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qfAXmxgNdUI=",
+  "dgSpecHash": "WFBvO5XzrFU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ZEUS\\Desktop\\solvetech\\backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\ZEUS\\Desktop\\solvetech\\CRUD1\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ZEUS\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ZEUS\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
